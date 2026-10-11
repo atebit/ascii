@@ -142,10 +142,11 @@ function scrambleText(s, amount, seed = 0) {
   return out;
 }
 
-// Chiptune bleeps from square and triangle waves. Off until the player turns sound on;
-// toggling also starts and stops the background music (music.js).
+// Chiptune bleeps from square and triangle waves, plus the background music (music.js).
+// On by default. Browsers only allow audio after a user gesture, so the first key, click or
+// tap anywhere unlocks it; M or the HUD label toggles it after that.
 const SFX = {
-  on: false,
+  on: true,
   ac: null,
   notes: {
     coin: [[988, 0.07], [1319, 0.25]],
@@ -157,9 +158,14 @@ const SFX = {
     meow: [[700, 0.08], [900, 0.12], [600, 0.14]],
     warp: [[196, 0.04], [262, 0.04], [349, 0.04], [466, 0.04], [622, 0.05]],
   },
+  unlock() {
+    if (this.ac) return;
+    this.ac = new AudioContext();
+    if (this.on) MUSIC.start(this.ac);
+  },
   toggle() {
     this.on = !this.on;
-    if (this.on && !this.ac) this.ac = new AudioContext();
+    if (!this.ac) this.ac = new AudioContext();
     if (this.on && this.ac.state === 'suspended') this.ac.resume();
     if (this.on) this.play('select');
     if (this.on) MUSIC.start(this.ac);
@@ -184,3 +190,12 @@ const SFX = {
     }
   },
 };
+
+// Unlock audio on the first gesture. Capture phase, so it runs before any stage handler
+// (the title's start key then plays its coin sound with the music already running).
+const SFX_GESTURES = ['pointerdown', 'keydown', 'touchstart'];
+function sfxUnlock() {
+  SFX.unlock();
+  for (const t of SFX_GESTURES) window.removeEventListener(t, sfxUnlock, true);
+}
+for (const t of SFX_GESTURES) window.addEventListener(t, sfxUnlock, true);

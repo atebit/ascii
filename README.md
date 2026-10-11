@@ -4,7 +4,7 @@ A small arcade-style game that explains ASCII and how to use ASCII wireframes in
 
 ## Play
 
-**[atebit.github.io/ascii](https://atebit.github.io/ascii/)**. Or download [index.html](index.html) and open it in a browser. It's one self-contained file (three.js is inlined); only the arcade font loads from Google Fonts. `#1` to `#5` jump to a stage. Press `M` for sound and music.
+**[atebit.github.io/ascii](https://atebit.github.io/ascii/)**. Or download [index.html](index.html) and open it in a browser. It's one self-contained file (three.js is inlined); only the arcade font loads from Google Fonts. `#1` to `#5` jump to a stage. Sound and music are on; press `M` to mute.
 
 ## The skill
 
@@ -41,6 +41,7 @@ Every push to `main` rebuilds the game and publishes it to GitHub Pages ([.githu
 | [09](iterations/09-generic-wireframes.md) | Generic wireframe examples | build |
 | [10](iterations/10-skill-download.md) | Skill download, team-agnostic stage 5 | build |
 | [11](iterations/11-github-pages.md) | GitHub Pages | ship |
+| [12](iterations/12-sound-on.md) | Sound and music on by default | ship |
 
 ## Open questions
 
