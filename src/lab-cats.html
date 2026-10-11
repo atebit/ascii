@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cat Lab</title>
+<style>
+  :root { --ink: #f4ecdf; --dim: #8a8394; --hot: #ff3d8b; --cyan: #4be3f0; --gold: #ffc53d; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; background: #000; color: var(--ink); overflow: hidden;
+    font: 12px/1.4 Menlo, "SF Mono", Consolas, monospace; }
+  header { position: fixed; inset: 0 0 auto 0; z-index: 3; display: flex; gap: 16px; align-items: center;
+    padding: 8px 16px; background: linear-gradient(#000e, #0000); pointer-events: none; }
+  header b { color: var(--gold); letter-spacing: .2em; }
+  #hud { color: var(--cyan); cursor: pointer; pointer-events: auto; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  #fps { margin-left: auto; color: var(--hot); }
+  main { display: flex; height: 100%; }
+  .pane { position: relative; flex: 1; min-width: 0; overflow: hidden; }
+  .pane canvas { display: block; width: 100%; height: 100%; touch-action: none; cursor: grab; }
+  .pane canvas:active { cursor: grabbing; }
+  .tag { position: absolute; left: 16px; bottom: 12px; color: var(--dim); letter-spacing: .2em; pointer-events: none; }
+  #shaded .tag { color: #7a3b2a; }
+  body[data-view="shaded"] #ascii, body[data-view="ascii"] #shaded { display: none; }
+  .pop { position: absolute; transform: translate(-50%, -100%); color: var(--gold); font-weight: bold; font-size: 16px;
+    pointer-events: none; animation: pop 1.2s ease-out forwards; text-shadow: 0 0 8px #ffc53d88; }
+  @keyframes pop { from { opacity: 1; margin-top: 0; } to { opacity: 0; margin-top: -48px; } }
+  #zz { position: absolute; pointer-events: none; color: var(--cyan); font-weight: bold; text-shadow: 0 0 6px #4be3f088; }
+  #zz span { position: absolute; animation: zz 3s linear infinite; opacity: 0; }
+  #zz span:nth-child(2) { animation-delay: 1s; font-size: 16px; }
+  #zz span:nth-child(3) { animation-delay: 2s; font-size: 20px; }
+  @keyframes zz { 0% { opacity: 0; transform: translate(0, 0); } 20% { opacity: 1; }
+    100% { opacity: 0; transform: translate(28px, -56px); } }
+</style>
+</head>
+<body>
+<header><b>CAT LAB</b><span id="hud"></span><span id="fps"></span></header>
+<main>
+  <section class="pane" id="shaded"><canvas></canvas><span class="tag">SHADED · THE MODEL</span></section>
+  <section class="pane" id="ascii"><canvas></canvas><span class="tag">ASCII · WHAT PLAYERS SEE</span>
+    <div id="zz"><span>z</span><span>z</span><span>Z</span></div></section>
+</main>
+<!-- THREE -->
+<script type="module">
+/* APP */
+</script>
+</body>
+</html>

@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>What Is ASCII?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #f4ecdf; --dim: #8a8394; --hot: #ff3d8b; --cyan: #4be3f0; --gold: #ffc53d; --orange: #ff8a3d; --violet: #9b5cff;
+    --arcade: "Press Start 2P", Menlo, monospace;
+    --mono: Menlo, "SF Mono", Consolas, "DejaVu Sans Mono", monospace;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; background: #000; color: var(--ink); overflow: hidden; font: 14px/1.4 var(--mono);
+    -webkit-tap-highlight-color: transparent; overscroll-behavior: none; }
+  #screen { position: fixed; inset: 0; width: 100%; height: 100%; display: block; }
+  #layers { position: fixed; inset: 0; }
+  .layer { position: absolute; inset: 0; display: none; }
+  .layer.on { display: block; }
+
+  /* HUD: white arcade text, framed by box-drawing rules like the storyboard. */
+  .hud { position: fixed; z-index: 10; display: flex; align-items: center; gap: 12px;
+    left: 0; right: 0; padding: 14px 16px; font: 12px/1 var(--arcade); letter-spacing: .08em; pointer-events: none;
+    text-shadow: 0 0 6px rgba(244, 236, 223, .35); }
+  .hud.top { top: 0; } .hud.bottom { bottom: 0; }
+  .hud span, .hud button { white-space: nowrap; }
+  /* Left text gives way first (ellipsis) so the right counter always stays on screen. */
+  #hud-tl, #hud-bl { min-width: 0; flex: 0 1 auto; overflow: hidden; text-overflow: ellipsis; }
+  #hud-tr, #hud-br, #hud-mid { flex: 0 0 auto; }
+  .hud .rule { flex: 1 1 0; min-width: 8px; overflow: hidden; font: 14px/1 var(--mono); color: var(--violet); opacity: .45; text-shadow: none; }
+  #hud-tl, #hud-bl { color: var(--ink); }
+  #hud-tr { color: var(--gold); text-shadow: 0 0 8px rgba(255, 197, 61, .45); }
+  #hud-br { color: var(--orange); text-shadow: 0 0 8px rgba(255, 138, 61, .45); }
+  #hud-bl, #hud-br, #hud-sound { pointer-events: auto; cursor: pointer; }
+  #hud-mid { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+  #hud-hearts { color: var(--hot); letter-spacing: .3em; margin-right: -.3em; text-shadow: 0 0 8px #ff3d8b99; }
+  #hud-hearts span { display: inline-block; animation: hud-beat 1.6s ease-in-out infinite; }
+  #hud-hearts span:nth-child(2) { animation-delay: .12s; } #hud-hearts span:nth-child(3) { animation-delay: .24s; }
+  #hud-hearts span:nth-child(4) { animation-delay: .36s; } #hud-hearts span:nth-child(5) { animation-delay: .48s; }
+  @keyframes hud-beat { 0%, 70%, 100% { transform: scale(1); } 80% { transform: scale(1.25); } }
+  #hud-dots { display: flex; gap: 2px; pointer-events: auto; }
+  #hud-dots button { all: unset; cursor: pointer; font: 12px/1 var(--mono); color: var(--dim); padding: 2px 4px; }
+  #hud-dots button:hover, #hud-dots button:focus-visible { color: var(--ink); }
+  #hud-dots button.on { color: var(--cyan); text-shadow: 0 0 6px var(--cyan); }
+  #hud-sound { position: fixed; z-index: 10; right: 16px; bottom: 52px; font: 8px/1 var(--arcade); color: var(--dim); }
+
+  /* CRT: scanlines, vignette and a faint flicker over everything. Never takes pointer events. */
+  #crt { position: fixed; inset: 0; z-index: 50; pointer-events: none;
+    background:
+      radial-gradient(ellipse 85% 80% at 50% 50%, transparent 60%, rgba(0, 0, 0, .6) 100%),
+      repeating-linear-gradient(to bottom, transparent 0 2px, rgba(0, 0, 0, .22) 2px 3px); }
+  #crt::after { content: ""; position: absolute; inset: 0;
+    background: radial-gradient(ellipse 70% 60% at 50% 55%, rgba(255, 61, 139, .05), transparent 70%);
+    animation: crt-flicker 5s steps(1) infinite; }
+  @keyframes crt-flicker { 0%, 100% { opacity: 1; } 31% { opacity: .7; } 32% { opacity: 1; } 77% { opacity: .82; } 78% { opacity: 1; } }
+
+  @media (max-width: 600px) {
+    .hud { font-size: 8px; gap: 6px; padding: 12px 10px; }
+    .hud .rule { font-size: 10px; }
+    #hud-hearts { letter-spacing: .1em; margin-right: -.1em; }
+    #hud-dots button { padding: 4px 5px; font-size: 13px; }
+    #hud-sound { bottom: 58px; right: 10px; }
+  }
+  @media (prefers-reduced-motion: reduce) { #hud-hearts span, #crt::after { animation: none; } }
+</style>
+</head>
+<body data-stage="1">
+<canvas id="screen"></canvas>
+<div id="layers"></div>
+<div class="hud top"><span id="hud-tl"></span><span class="rule" aria-hidden="true"></span><span id="hud-tr"></span></div>
+<div class="hud bottom"><span id="hud-bl"></span><span class="rule" aria-hidden="true"></span><span id="hud-mid"><span id="hud-hearts" aria-label="5 lives"><span>♥</span><span>♥</span><span>♥</span><span>♥</span><span>♥</span></span><span id="hud-dots" role="group" aria-label="Stages"></span></span><span class="rule" aria-hidden="true"></span><span id="hud-br"></span></div>
+<span id="hud-sound"></span>
+<div id="crt" aria-hidden="true"></div>
+<!-- THREE -->
+<script type="module">
+/* APP */
+</script>
+</body>
+</html>
