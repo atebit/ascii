@@ -4,7 +4,7 @@ A small arcade-style game that explains ASCII and how to use ASCII wireframes in
 
 ## Play
 
-Download [index.html](index.html) and open it in a browser. It's one self-contained file (three.js is inlined); only the arcade font loads from Google Fonts. `#1` to `#5` jump to a stage. Press `M` for sound and music.
+**[atebit.github.io/ascii](https://atebit.github.io/ascii/)**. Or download [index.html](index.html) and open it in a browser. It's one self-contained file (three.js is inlined); only the arcade font loads from Google Fonts. `#1` to `#5` jump to a stage. Press `M` for sound and music.
 
 ## The skill
 
@@ -12,7 +12,7 @@ Download [index.html](index.html) and open it in a browser. It's one self-contai
 
 ## Develop
 
-Edit `src/`, then run `python3 build.py` to rebuild `index.html` and `lab/cats.html`. The first build fetches three.js r170 into `vendor/` (needs npm). `python3 build.py --only N` builds `dev/stage-N.html` with the other stages stubbed. To preview, serve the folder, e.g. `python3 -m http.server 4173`.
+Every push to `main` rebuilds the game and publishes it to GitHub Pages ([.github/workflows/pages.yml](.github/workflows/pages.yml)). Locally: edit `src/`, then run `python3 build.py` to rebuild `index.html` and `lab/cats.html`. The first build fetches three.js r170 into `vendor/` (needs npm). `python3 build.py --only N` builds `dev/stage-N.html` with the other stages stubbed. To preview, serve the folder, e.g. `python3 -m http.server 4173`.
 
 ## Files
 
@@ -40,8 +40,8 @@ Edit `src/`, then run `python3 build.py` to rebuild `index.html` and `lab/cats.h
 | [08](iterations/08-music.md) | Darkwave music | build |
 | [09](iterations/09-generic-wireframes.md) | Generic wireframe examples | build |
 | [10](iterations/10-skill-download.md) | Skill download, team-agnostic stage 5 | build |
+| [11](iterations/11-github-pages.md) | GitHub Pages | ship |
 
 ## Open questions
 
-1. **Token numbers on stage 4.** Placeholders until we measure a real wireframe against the same screen built in HTML.
-2. **How folks open it.** Downloading `index.html` works today. GitHub Pages would give a link that plays in one click.
+- **Token numbers on stage 4.** Placeholders until we measure a real wireframe against the same screen built in HTML.
